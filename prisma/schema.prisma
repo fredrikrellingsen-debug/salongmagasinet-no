@@ -1,0 +1,77 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Publisher {
+  id           String       @id @default(cuid())
+  domain       String       @unique
+  name         String
+  tags         String[]
+  adsEnabled   Boolean      @default(false)
+  leadsEnabled Boolean      @default(false)
+  articles     Article[]
+  ads          AdCampaign[]
+}
+
+model Customer {
+  id               String    @id @default(cuid())
+  companyName      String
+  description      String    @db.Text
+  tags             String[]
+  subscriptionTier String    @default("standard") // "standard" eller "pro"
+  email            String?   @unique
+  passwordHash     String?
+  orgNr            String?
+  contactPerson    String?
+  phone            String?
+  invoiceEmail     String?
+  websiteUrl       String?
+  createdAt        DateTime  @default(now())
+  articles         Article[]
+  leads            Lead[]
+}
+
+model Article {
+  id          String    @id @default(cuid())
+  title       String
+  content     String    @db.Text
+  status      String    @default("pending")
+  publishedAt DateTime?
+  publisherId String
+  publisher   Publisher @relation(fields: [publisherId], references: [id])
+  customerId  String
+  customer    Customer  @relation(fields: [customerId], references: [id])
+
+  @@index([publisherId, status, publishedAt])
+  @@index([customerId])
+}
+
+model AdCampaign {
+  id          String    @id @default(cuid())
+  imageUrl    String
+  targetUrl   String
+  slotId      String
+  publisherId String
+  publisher   Publisher @relation(fields: [publisherId], references: [id])
+
+  @@index([publisherId, slotId])
+}
+
+model Lead {
+  id         String   @id @default(cuid())
+  name       String
+  email      String
+  phone      String?
+  message    String   @db.Text
+  sourceUrl  String
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@index([customerId, createdAt])
+}

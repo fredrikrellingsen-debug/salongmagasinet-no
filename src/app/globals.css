@@ -1,0 +1,194 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #fcfcf9;
+  --surface: #ffffff;
+  --ink: #1a1a1a;
+  --muted: #52525b;
+  --accent: #b91c1c;
+  --accent-soft: #fef2f2;
+  --border: #e5e5e0;
+  --header-bg: #1a1a1a;
+  --header-ink: #ffffff;
+  --font-heading: Georgia, 'Times New Roman', Times, serif;
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+}
+
+/* Tydelige fokusrammer for tastatur- og TV-navigasjon (WCAG AA) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Redaksjonell artikkeltypografi */
+.magazine-prose {
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.78;
+}
+
+.magazine-prose [data-category] {
+  display: none !important;
+}
+
+.magazine-prose h2,
+.magazine-prose h3,
+.magazine-prose h4 {
+  font-family: var(--font-heading);
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+
+.magazine-prose h2 {
+  font-size: 1.625rem;
+  line-height: 1.25;
+  margin-top: 2.25rem;
+  margin-bottom: 0.9rem;
+}
+
+.magazine-prose h3 {
+  font-size: 1.25rem;
+  line-height: 1.35;
+  margin-top: 1.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.magazine-prose p {
+  margin-top: 1.15rem;
+  margin-bottom: 1.15rem;
+  color: var(--ink);
+}
+
+.magazine-prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+.magazine-prose blockquote {
+  border-left: 4px solid var(--accent);
+  background-color: var(--accent-soft);
+  padding: 1.125rem 1.375rem;
+  border-radius: 0.5rem;
+  margin: 1.75rem 0;
+  color: var(--ink);
+  font-style: normal;
+}
+
+.magazine-prose blockquote p:first-child {
+  margin-top: 0;
+}
+
+.magazine-prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.magazine-prose figure {
+  margin: 2rem 0;
+}
+
+.magazine-prose figure img,
+.magazine-prose img {
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  height: auto;
+}
+
+.magazine-prose figcaption {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+.magazine-prose ul,
+.magazine-prose ol {
+  margin: 1.25rem 0;
+  padding-left: 1.5rem;
+}
+
+.magazine-prose li {
+  margin: 0.45rem 0;
+}
+
+/* Myke app-overganger (kun transform og opacity) */
+@keyframes sheetUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-sheet-up {
+  animation: sheetUp 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 180ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

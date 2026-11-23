@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Salongmagasinet">
+  <rect width="64" height="64" rx="14" fill="#9D174D"/>
+  <path d="M32 12C34.2 23.4 40.6 29.8 52 32C40.6 34.2 34.2 40.6 32 52C29.8 40.6 23.4 34.2 12 32C23.4 29.8 29.8 23.4 32 12Z" fill="#FDF2F8"/>
+  <path d="M22 18C26.5 18 30 21.5 30 26C25.5 26 22 22.5 22 18Z" fill="#FBCFE8"/>
+  <path d="M42 46C37.5 46 34 42.5 34 38C38.5 38 42 41.5 42 46Z" fill="#FBCFE8"/>
+</svg>
