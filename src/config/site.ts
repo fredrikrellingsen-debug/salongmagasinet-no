@@ -79,8 +79,8 @@ export const SITE_CONFIG: SiteConfig = {
     border: "#f1dce6",
     headerBg: "#3b0724",
     headerInk: "#fdf2f8",
-    fontHeading: "Georgia, Cambria, serif",
-    fontBody: "system-ui, -apple-system, sans-serif",
+    fontHeading: "var(--font-heading-google), Georgia, serif",
+    fontBody: "var(--font-body-google), system-ui, sans-serif",
   },
   aboutText: "Salongmagasinet skriver redaksjonelle guider og fagartikler om hårpleie, frisørtrender, profesjonell hudpleie, spa og salongbehandlinger i Norge.",
 };

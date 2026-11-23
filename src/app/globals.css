@@ -59,98 +59,146 @@ textarea:focus-visible,
 }
 
 /* Redaksjonell artikkeltypografi */
-.magazine-prose {
+.magazine-prose,
+.prose-editorial {
   color: var(--ink);
-  font-size: 1.0625rem;
-  line-height: 1.78;
+  font-size: 1.075rem;
+  line-height: 1.82;
+  font-feature-settings: 'kern' 1, 'liga' 1;
 }
 
-.magazine-prose [data-category] {
+.magazine-prose [data-category],
+.prose-editorial [data-category] {
   display: none !important;
 }
 
 .magazine-prose h2,
 .magazine-prose h3,
-.magazine-prose h4 {
+.magazine-prose h4,
+.prose-editorial h2,
+.prose-editorial h3,
+.prose-editorial h4 {
   font-family: var(--font-heading);
   color: var(--ink);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  text-wrap: balance;
+  scroll-margin-top: 5rem;
 }
 
-.magazine-prose h2 {
-  font-size: 1.625rem;
-  line-height: 1.25;
-  margin-top: 2.25rem;
-  margin-bottom: 0.9rem;
+.magazine-prose h2,
+.prose-editorial h2 {
+  font-size: 1.65rem;
+  line-height: 1.24;
+  margin-top: 2.4rem;
+  margin-bottom: 0.95rem;
 }
 
-.magazine-prose h3 {
-  font-size: 1.25rem;
-  line-height: 1.35;
-  margin-top: 1.75rem;
-  margin-bottom: 0.65rem;
+.magazine-prose h3,
+.prose-editorial h3 {
+  font-size: 1.275rem;
+  line-height: 1.32;
+  margin-top: 1.85rem;
+  margin-bottom: 0.7rem;
 }
 
-.magazine-prose p {
-  margin-top: 1.15rem;
-  margin-bottom: 1.15rem;
+.magazine-prose p,
+.prose-editorial p {
+  margin-top: 1.2rem;
+  margin-bottom: 1.2rem;
   color: var(--ink);
 }
 
-.magazine-prose a {
+.magazine-prose a,
+.prose-editorial a {
   color: var(--accent);
   text-decoration: underline;
+  text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
   font-weight: 600;
+  transition: color 150ms ease, opacity 150ms ease;
 }
 
-.magazine-prose blockquote {
+.magazine-prose a:hover,
+.prose-editorial a:hover {
+  opacity: 0.85;
+}
+
+.magazine-prose blockquote,
+.prose-editorial blockquote {
   border-left: 4px solid var(--accent);
   background-color: var(--accent-soft);
-  padding: 1.125rem 1.375rem;
-  border-radius: 0.5rem;
-  margin: 1.75rem 0;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 0.75rem 0.75rem 0;
+  margin: 2rem 0;
   color: var(--ink);
   font-style: normal;
+  font-size: 1.085rem;
+  line-height: 1.68;
+  box-shadow: 0 4px 16px -6px rgba(15, 23, 42, 0.08);
 }
 
-.magazine-prose blockquote p:first-child {
+.magazine-prose blockquote p:first-child,
+.prose-editorial blockquote p:first-child {
   margin-top: 0;
 }
 
-.magazine-prose blockquote p:last-child {
+.magazine-prose blockquote p:last-child,
+.prose-editorial blockquote p:last-child {
   margin-bottom: 0;
 }
 
-.magazine-prose figure {
-  margin: 2rem 0;
+.magazine-prose figure,
+.prose-editorial figure {
+  margin: 2.25rem 0;
 }
 
 .magazine-prose figure img,
-.magazine-prose img {
-  border-radius: 0.5rem;
+.magazine-prose img,
+.prose-editorial figure img,
+.prose-editorial img {
+  border-radius: 0.75rem;
   border: 1px solid var(--border);
+  box-shadow: 0 10px 28px -10px rgba(15, 23, 42, 0.14);
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
   height: auto;
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1), opacity 240ms ease;
 }
 
-.magazine-prose figcaption {
-  font-size: 0.8125rem;
+.magazine-prose figure:hover img,
+.magazine-prose img:hover,
+.prose-editorial figure:hover img,
+.prose-editorial img:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px -12px rgba(15, 23, 42, 0.2);
+}
+
+.magazine-prose figcaption,
+.prose-editorial figcaption {
+  font-size: 0.84rem;
   color: var(--muted);
-  margin-top: 0.5rem;
+  margin-top: 0.625rem;
   line-height: 1.5;
 }
 
 .magazine-prose ul,
-.magazine-prose ol {
-  margin: 1.25rem 0;
+.magazine-prose ol,
+.prose-editorial ul,
+.prose-editorial ol {
+  margin: 1.35rem 0;
   padding-left: 1.5rem;
 }
 
-.magazine-prose li {
-  margin: 0.45rem 0;
+.magazine-prose li,
+.prose-editorial li {
+  margin: 0.5rem 0;
+}
+
+.magazine-prose li::marker,
+.prose-editorial li::marker {
+  color: var(--accent);
 }
 
 /* Myke app-overganger (kun transform og opacity) */
