@@ -114,6 +114,9 @@ export default function Footer() {
                 {publisherLegalName}
               </p>
               <p>
+                Utgitt av AIChat Norge AS · Org.nr 933 851 222
+              </p>
+              <p>
                 Redaksjonen:{' '}
                 <a
                   href={`mailto:${editorialEmail}`}
@@ -133,7 +136,14 @@ export default function Footer() {
                   {tipsEmail}
                 </a>
               </p>
-              <p className="pt-1">
+              <div className="pt-1 flex flex-col items-start">
+                <Link
+                  href="/annonsering"
+                  className="inline-flex items-center min-h-[44px] underline hover:opacity-80 font-medium"
+                  style={{ color: primaryText }}
+                >
+                  Annonsering og kommersielt samarbeid
+                </Link>
                 <Link
                   href="/personvern"
                   className="inline-flex items-center min-h-[44px] underline hover:opacity-80 font-medium"
@@ -141,7 +151,7 @@ export default function Footer() {
                 >
                   Personvernerklæring
                 </Link>
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -164,6 +174,13 @@ export default function Footer() {
             </a>
           </p>
           <div className="flex items-center gap-6">
+            <Link
+              href="/annonsering"
+              className="hover:underline min-h-[44px] inline-flex items-center"
+              style={{ color: primaryText }}
+            >
+              Annonsering
+            </Link>
             <Link
               href="/personvern"
               className="hover:underline min-h-[44px] inline-flex items-center"
