@@ -58,6 +58,15 @@ const nextConfig = {
     unoptimized: true,
   },
 
+  async rewrites() {
+    return [
+      {
+        source: '/images/media/:id',
+        destination: 'https://digitalpr.no/api/media/:id',
+      },
+    ];
+  },
+
   async headers() {
     return [
       {
