@@ -150,6 +150,44 @@ export default function RootLayout({
             />
           </>
         ) : null}
+        {/*
+          Strukturdata: hvem som står bak magasinet, og at domenet er et nettsted.
+          Samme opplysning som footeren. WebSite-noden er ikke pynt: uten en
+          sidetype i grafen har en AI-crawler ingen entitet å feste siden til.
+          Målt 23.11.2026: tolv magasiner emitterte bare Organization, og
+          ai-synlighet.mjs meldte «schema: mangler sidetype» på alle tolv.
+        */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'Organization',
+                  '@id': `https://${SITE_CONFIG.displayDomain}/#organisasjon`,
+                  name: SITE_CONFIG.siteName,
+                  legalName: 'AIChat Norge AS',
+                  url: `https://${SITE_CONFIG.displayDomain}`,
+                  email: SITE_CONFIG.editorialEmail,
+                  identifier: {
+                    '@type': 'PropertyValue',
+                    name: 'Organisasjonsnummer',
+                    value: '933 851 222',
+                  },
+                },
+                {
+                  '@type': 'WebSite',
+                  '@id': `https://${SITE_CONFIG.displayDomain}/#nettsted`,
+                  url: `https://${SITE_CONFIG.displayDomain}`,
+                  name: SITE_CONFIG.siteName,
+                  inLanguage: 'nb-NO',
+                  publisher: { '@id': `https://${SITE_CONFIG.displayDomain}/#organisasjon` },
+                },
+              ],
+            }),
+          }}
+        />
       </body>
     </html>
   );
