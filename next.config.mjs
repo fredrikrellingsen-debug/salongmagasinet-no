@@ -59,10 +59,13 @@ const nextConfig = {
   },
 
   async rewrites() {
+    const mediaOrigin = (
+      process.env.HUB_INTERNAL_URL || 'http://digitalpr.railway.internal:8080'
+    ).replace(/\/+$/, '');
     return [
       {
         source: '/images/media/:id',
-        destination: 'https://digitalpr.no/api/media/:id',
+        destination: `${mediaOrigin}/api/media/:id`,
       },
     ];
   },
