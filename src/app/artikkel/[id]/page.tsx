@@ -39,6 +39,34 @@ interface ArticlePageProps {
 const STRIP_DATA_CATEGORY_DIV =
   /<div\b[^>]*\bdata-category\s*=[^>]*>[\s\S]*?<\/div>/gi;
 
+function isEditorialCustomer(
+  customer: { email?: string | null; companyName?: string | null } | null | undefined,
+  domainCandidates: string[]
+): boolean {
+  const email = (customer?.email || '').trim().toLowerCase();
+  const editorialEmail = SITE_CONFIG.editorialEmail.trim().toLowerCase();
+  if (
+    email &&
+    (email === editorialEmail ||
+      email.startsWith('redaksjon@') ||
+      domainCandidates.some((d) => email === `redaksjon@${d}` || email === `redaksjonen@${d}`))
+  ) {
+    return true;
+  }
+
+  const name = (customer?.companyName || '').trim().toLowerCase();
+  if (!name) return true;
+  if (
+    name.includes('redaktør-teamet') ||
+    name.includes('redaksjon') ||
+    name === SITE_CONFIG.siteName.toLowerCase()
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 function getSafeWebsiteUrl(raw?: string | null): string | null {
   if (!raw) return null;
   const trimmed = raw.trim();
@@ -155,6 +183,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         customer: {
           select: {
             id: true,
+            email: true,
             companyName: true,
             tags: true,
             websiteUrl: true,
@@ -208,8 +237,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const articleUrl = `https://${SITE_CONFIG.displayDomain}/artikkel/${article.id}`;
   const cleanHtml = sanitizeHtml(article.content).replace(STRIP_DATA_CATEGORY_DIV, '');
+  const isEditorial = isEditorialCustomer(article.customer, domainCandidates);
   const publicTags = filterPublicTags(article.customer?.tags);
-  const safeWebsiteUrl = getSafeWebsiteUrl(article.customer?.websiteUrl);
+  const safeWebsiteUrl = isEditorial ? null : getSafeWebsiteUrl(article.customer?.websiteUrl);
   const category = extractCategory(article, SITE_CONFIG.categories);
   const readMinutes = estimateReadMinutes(article.content);
   const heroOrArticleImg = sanitizeImageSrc(extractFirstImage(article.content));
@@ -331,14 +361,24 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               style={{ borderColor: 'var(--border)' }}
             >
               <div className="flex flex-wrap items-center gap-3 text-xs" style={{ color: 'var(--muted)' }}>
-                {article.customer?.companyName && (
+                {isEditorial ? (
                   <span
                     className="inline-flex items-center gap-1.5 font-semibold"
                     style={{ color: 'var(--ink)' }}
                   >
                     <Building2 className="w-3.5 h-3.5 opacity-70" aria-hidden="true" />
-                    Fagkilde: {article.customer.companyName}
+                    Redaksjonen i {SITE_CONFIG.siteName}
                   </span>
+                ) : (
+                  article.customer?.companyName && (
+                    <span
+                      className="inline-flex items-center gap-1.5 font-semibold"
+                      style={{ color: 'var(--ink)' }}
+                    >
+                      <Building2 className="w-3.5 h-3.5 opacity-70" aria-hidden="true" />
+                      Fagkilde: {article.customer.companyName}
+                    </span>
+                  )
                 )}
 
                 {publicTags.length > 0 && (
@@ -414,18 +454,20 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </div>
             )}
 
-            {/* Lead Form */}
+            {/* Lead Form / Redaksjonell kontakt */}
             {leadsEnabled && (
               <div className="max-w-[68ch] mx-auto">
                 <LeadForm
                   customerId={article.customerId}
                   companyName={article.customer?.companyName}
                   sourceUrl={articleUrl}
+                  isEditorial={isEditorial}
+                  siteName={SITE_CONFIG.siteName}
                 />
               </div>
             )}
 
-            {/* Redaksjonelt samarbeid */}
+            {/* Redaksjons- eller samarbeidsboks */}
             <div
               className="max-w-[68ch] mx-auto border-t mt-10 pt-6 flex items-start gap-4"
               style={{ borderColor: 'var(--border)' }}
@@ -441,36 +483,55 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 {SITE_CONFIG.shortMark}
               </div>
               <div className="space-y-2">
-                <h2
-                  className="font-bold text-sm flex items-center gap-1.5"
-                  style={{ color: 'var(--ink)' }}
-                >
-                  Redaksjonelt samarbeid{' '}
-                  <ShieldCheck className="w-4 h-4 text-emerald-700" aria-hidden="true" />
-                </h2>
-                <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
-                  Publisert i {SITE_CONFIG.siteName} i samarbeid med{' '}
-                  <strong style={{ color: 'var(--ink)' }}>
-                    {article.customer?.companyName || 'fagmiljøet'}
-                  </strong>
-                  . Vårt mål er å dele nyttig innsikt og aktuelt fagstoff med norske lesere.
-                </p>
-                {safeWebsiteUrl && article.customer?.companyName && (
-                  <div className="pt-1">
-                    <a
-                      href={safeWebsiteUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] text-xs sm:text-sm font-bold transition-opacity hover:opacity-90 ${cardRadius}`}
-                      style={{
-                        backgroundColor: 'var(--accent)',
-                        color: accentInk,
-                      }}
+                {isEditorial ? (
+                  <>
+                    <h2
+                      className="font-bold text-sm flex items-center gap-1.5"
+                      style={{ color: 'var(--ink)' }}
                     >
-                      <span>Besøk {article.customer.companyName}</span>
-                      <ExternalLink className="w-4 h-4 shrink-0" aria-hidden="true" />
-                    </a>
-                  </div>
+                      Redaksjonen i {SITE_CONFIG.siteName}{' '}
+                      <ShieldCheck className="w-4 h-4 text-emerald-700" aria-hidden="true" />
+                    </h2>
+                    <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+                      Denne artikkelen er skrevet av redaksjonen i{' '}
+                      <strong style={{ color: 'var(--ink)' }}>{SITE_CONFIG.siteName}</strong>. Vårt
+                      mål er å dele uavhengig, nyttig innsikt og aktuelt fagstoff med norske lesere.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h2
+                      className="font-bold text-sm flex items-center gap-1.5"
+                      style={{ color: 'var(--ink)' }}
+                    >
+                      Redaksjonelt samarbeid{' '}
+                      <ShieldCheck className="w-4 h-4 text-emerald-700" aria-hidden="true" />
+                    </h2>
+                    <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+                      Publisert i {SITE_CONFIG.siteName} i samarbeid med{' '}
+                      <strong style={{ color: 'var(--ink)' }}>
+                        {article.customer?.companyName || 'fagmiljøet'}
+                      </strong>
+                      . Vårt mål er å dele nyttig innsikt og aktuelt fagstoff med norske lesere.
+                    </p>
+                    {safeWebsiteUrl && article.customer?.companyName && (
+                      <div className="pt-1">
+                        <a
+                          href={safeWebsiteUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] text-xs sm:text-sm font-bold transition-opacity hover:opacity-90 ${cardRadius}`}
+                          style={{
+                            backgroundColor: 'var(--accent)',
+                            color: accentInk,
+                          }}
+                        >
+                          <span>Besøk {article.customer.companyName}</span>
+                          <ExternalLink className="w-4 h-4 shrink-0" aria-hidden="true" />
+                        </a>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>

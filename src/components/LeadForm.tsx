@@ -8,11 +8,35 @@ interface LeadFormProps {
   customerId: string;
   companyName?: string;
   sourceUrl?: string;
+  isEditorial?: boolean;
+  siteName?: string;
 }
 
-export default function LeadForm({ customerId, companyName, sourceUrl }: LeadFormProps) {
+export default function LeadForm({
+  customerId,
+  companyName,
+  sourceUrl,
+  isEditorial = false,
+  siteName,
+}: LeadFormProps) {
   const [isPending, startTransition] = useTransition();
   const [result, setResult] = useState<LeadActionResult | null>(null);
+
+  const editorialLabel = siteName || 'magasinet';
+  const eyebrowText = isEditorial ? 'Kontakt redaksjonen' : 'Direkte kontakt';
+  const headingText = isEditorial
+    ? `Tips eller spørsmål til redaksjonen i ${editorialLabel}?`
+    : `Interessert? Ta kontakt med ${companyName || 'bedriften'}`;
+  const introText = isEditorial
+    ? `Har du tips, innspill eller spørsmål til denne artikkelen? Fyll ut skjemaet under, så tar redaksjonen i ${editorialLabel} kontakt med deg.`
+    : `Fyll ut skjemaet under, så tar ${companyName || 'bedriften'} kontakt med deg for en uforpliktende prat.`;
+  const successText = isEditorial
+    ? `Vi har mottatt meldingen din og sendt den direkte til redaksjonen i ${editorialLabel}.`
+    : `Vi har mottatt meldingen din og videreformidlet den direkte til ${companyName || 'aktøren'}.`;
+  const messagePlaceholder = isEditorial
+    ? 'Del ditt tips, innspill eller spørsmål med redaksjonen...'
+    : 'Hva ønsker du mer informasjon om?';
+  const submitLabel = isEditorial ? 'Send til redaksjonen' : 'Send henvendelse';
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,16 +73,16 @@ export default function LeadForm({ customerId, companyName, sourceUrl }: LeadFor
           className="text-xs font-mono uppercase tracking-widest font-bold block mb-1"
           style={{ color: 'var(--accent)' }}
         >
-          Direkte kontakt
+          {eyebrowText}
         </span>
         <h3
           className="text-2xl font-bold mb-2"
           style={{ fontFamily: 'var(--font-heading)', color: 'var(--ink)' }}
         >
-          Interessert? Ta kontakt med {companyName || 'bedriften'}
+          {headingText}
         </h3>
         <p className="text-sm mb-6 leading-relaxed" style={{ color: 'var(--muted)' }}>
-          Fyll ut skjemaet under, så tar {companyName || 'bedriften'} kontakt med deg for en uforpliktende prat.
+          {introText}
         </p>
 
         {result?.success ? (
@@ -67,7 +91,7 @@ export default function LeadForm({ customerId, companyName, sourceUrl }: LeadFor
             <div>
               <h4 className="font-bold text-sm">Takk for din henvendelse!</h4>
               <p className="text-sm mt-1 text-emerald-800">
-                Vi har mottatt meldingen din og videreformidlet den direkte til {companyName || 'aktøren'}.
+                {successText}
               </p>
             </div>
           </div>
@@ -185,7 +209,7 @@ export default function LeadForm({ customerId, companyName, sourceUrl }: LeadFor
                 name="message"
                 rows={3}
                 maxLength={2000}
-                placeholder="Hva ønsker du mer informasjon om?"
+                placeholder={messagePlaceholder}
                 className="w-full min-h-[96px] rounded-md px-3.5 py-2.5 text-sm border outline-none transition-colors focus:ring-2"
                 style={{
                   backgroundColor: 'var(--surface)',
@@ -207,7 +231,7 @@ export default function LeadForm({ customerId, companyName, sourceUrl }: LeadFor
                 </>
               ) : (
                 <>
-                  <Send className="w-3.5 h-3.5" /> Send henvendelse
+                  <Send className="w-3.5 h-3.5" /> {submitLabel}
                 </>
               )}
             </button>
