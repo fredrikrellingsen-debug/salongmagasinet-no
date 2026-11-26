@@ -30,11 +30,12 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
+const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
+
 export const metadata: Metadata = {
-  verification: {
-    google: 'WvZPvZkztRsU9Vy0sWXjeYZlt9nUtb0xhyy3_d9iUz8',
-  },
+  ...(googleVerification ? { verification: { google: googleVerification } } : {}),
   metadataBase: new URL(`https://${SITE_CONFIG.displayDomain}`),
+  alternates: { canonical: '/' },
   title: {
     default: `${SITE_CONFIG.siteName} – ${SITE_CONFIG.categories.slice(0, 3).join(', ')}`,
     template: `%s | ${SITE_CONFIG.siteName}`,
