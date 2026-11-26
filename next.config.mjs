@@ -50,9 +50,8 @@ if (fs.promises) {
 const nextConfig = {
   output: 'standalone',
 
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client'],
-  },
+  // Next 16: serverComponentsExternalPackages er flyttet ut av experimental.
+  serverExternalPackages: ['@prisma/client'],
 
   images: {
     unoptimized: true,
@@ -84,10 +83,6 @@ const nextConfig = {
     ];
   },
 
-  webpack: (config) => {
-    config.cache = false;
-    return config;
-  },
 };
 
 export default nextConfig;

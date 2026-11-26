@@ -33,7 +33,8 @@ import {
 export const revalidate = 60;
 
 interface ArticlePageProps {
-  params: { id: string };
+  // Next 15/16: params er en Promise og må awaites.
+  params: Promise<{ id: string }>;
 }
 
 const STRIP_DATA_CATEGORY_DIV =
@@ -104,12 +105,13 @@ function getSafeWebsiteUrl(raw?: string | null): string | null {
 }
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  const { id } = await params;
   const domainCandidates = getDomainCandidates(SITE_CONFIG.domain);
 
   const article = await prisma.article
     .findFirst({
       where: {
-        id: params.id,
+        id,
         status: 'published',
         publisher: { domain: { in: domainCandidates } },
       },
@@ -170,12 +172,13 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
+  const { id } = await params;
   const domainCandidates = getDomainCandidates(SITE_CONFIG.domain);
 
   const article = await prisma.article
     .findFirst({
       where: {
-        id: params.id,
+        id,
         status: 'published',
         publisher: { domain: { in: domainCandidates } },
       },

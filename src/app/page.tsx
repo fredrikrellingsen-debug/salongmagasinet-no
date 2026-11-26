@@ -44,8 +44,10 @@ interface EnrichedArticle {
 export default async function Frontpage({
   searchParams,
 }: {
-  searchParams?: { kategori?: string; sok?: string };
+  searchParams?: Promise<{ kategori?: string; sok?: string }>;
 }) {
+  // Next 15/16: searchParams er en Promise og må awaites.
+  const params = (await searchParams) ?? {};
   const domainCandidates = getDomainCandidates(SITE_CONFIG.domain);
 
   const publisher = await prisma.publisher
@@ -87,8 +89,8 @@ export default async function Frontpage({
     excerpt: extractExcerpt(article.content, 220),
   }));
 
-  const rawCategory = searchParams?.kategori?.trim() || '';
-  const rawSearch = searchParams?.sok?.trim() || '';
+  const rawCategory = params.kategori?.trim() || '';
+  const rawSearch = params.sok?.trim() || '';
   const categoryFilter = rawCategory.toLowerCase();
   const searchFilter = rawSearch.toLowerCase();
   const isFiltered = Boolean(categoryFilter || searchFilter);

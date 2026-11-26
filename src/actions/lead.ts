@@ -43,8 +43,9 @@ function isRateLimited(key: string): boolean {
   return false;
 }
 
-function getClientIp(): string {
-  const hdrs = headers();
+async function getClientIp(): Promise<string> {
+  // Next 15/16: headers() er asynkron.
+  const hdrs = await headers();
   const forwarded = hdrs.get('x-forwarded-for');
   if (forwarded) {
     return forwarded.split(',')[0].trim();
@@ -99,7 +100,7 @@ export async function submitLeadAction(
   }
 
   // 3. Rate limiting pr IP og e-post
-  const clientIp = getClientIp();
+  const clientIp = await getClientIp();
   if (isRateLimited(`ip:${clientIp}`) || isRateLimited(`email:${email}`)) {
     return {
       error: 'For mange henvendelser på kort tid. Vennligst vent noen minutter før du prøver igjen.',
