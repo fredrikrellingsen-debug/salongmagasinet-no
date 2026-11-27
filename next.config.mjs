@@ -78,6 +78,14 @@ const nextConfig = {
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          // Transporten og dokumentet (politikk § 33). HSTS med ett års varighet,
+          // og en håndhevet CSP — ikke Report-Only, som ikke blokkerer noe.
+          // Policyen er den samme som de andre DigitalPR-magasinene bruker: GA4
+          // hentes fra googletagmanager.com og snakker med google-analytics.com,
+          // fontene serveres fra eget opphav (next/font), og annonsebildene kan
+          // ligge på en ekstern https-adresse — derfor `https:` i img-src.
+          { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' },
+          { key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net; frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'" },
         ],
       },
     ];
